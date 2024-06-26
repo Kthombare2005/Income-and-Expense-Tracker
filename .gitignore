@@ -1,0 +1,15 @@
+# Python
+*.pyc
+__pycache__/
+venv/
+.env
+
+# Streamlit
+.streamlit/
+
+# MongoDB
+.mongo/
+
+# IDE or Editor files
+.idea/
+.vscode/
