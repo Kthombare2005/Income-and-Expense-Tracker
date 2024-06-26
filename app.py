@@ -118,8 +118,3 @@ if selected == "Data Visualization":
             fig = go.Figure(data)
             fig.update_layout(margin=dict(l=0, r=0, t=5, b=5))
             st.plotly_chart(fig, use_container_width=True)
-
-# Footer
-st.markdown("<br>", unsafe_allow_html=True)
-st.markdown("<hr>", unsafe_allow_html=True)
-st.markdown("Developed by Ketan Thombare ❤️", unsafe_allow_html=True)
