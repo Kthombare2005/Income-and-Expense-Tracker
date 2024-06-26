@@ -4,9 +4,6 @@ __pycache__/
 venv/
 .env
 
-# Streamlit
-.streamlit/
-
 # MongoDB
 .mongo/
 
