@@ -3,8 +3,13 @@ from datetime import datetime
 import streamlit as st
 from streamlit_option_menu import option_menu
 import plotly.graph_objects as go
+from pymongo import MongoClient
 
-# Define your constants and data
+# MongoDB connection
+client = MongoClient("mongodb+srv://Nexus_Coder:Ketan%402005@expensetracker.ddtuk3v.mongodb.net/?retryWrites=true&w=majority&appName=ExpenseTracker")
+db = client["ExpenseTracker"]
+collection = db["expenses"]
+
 incomes = ['Salary', 'Other Income']
 expenses = ["Rent", "Utilities", "Groceries", "Loan Instalments", "Petrol/Diesel", "Car", "Other Expenses", "Saving"]
 currency = "Rs"
@@ -12,15 +17,21 @@ page_title = "Income and Expense Tracker"
 page_icon = ":money_with_wings:"
 layout = "centered"
 
-# Set Streamlit page configuration
 st.set_page_config(page_title=page_title, page_icon=page_icon, layout=layout)
 st.title(page_title + " " + page_icon)
 
-# Options for the menu
 years = [datetime.today().year, datetime.today().year + 1]
-months = list(calendar.month_name)[1:]  # Using full month names
+months = list(calendar.month_name[1:])
 
-# Option menu for selecting Data Entry or Data Visualization
+hide_st_style = """
+                <style>
+                #MainMenu {visibility:hidden;}
+                footer {visibility: hidden;}
+                header {visibility: hidden;}
+                </style>
+                """
+st.markdown(hide_st_style, unsafe_allow_html=True)
+
 selected = option_menu(
     menu_title=None,
     options=["Data Entry", "Data Visualization"],
@@ -28,7 +39,10 @@ selected = option_menu(
     orientation="horizontal",
 )
 
-# Function to display Data Entry section
+def get_all_periods():
+    periods = collection.distinct("period")
+    return periods
+
 if selected == "Data Entry":
     st.header(f"Data Entry in {currency}")
     with st.form("entry_form", clear_on_submit=True):
@@ -49,30 +63,39 @@ if selected == "Data Entry":
         "---"
         submitted = st.form_submit_button("Save Data")
         if submitted:
-            period = f"{st.session_state['year']}_{st.session_state['month']}"
-            incomes = {income: st.session_state[income] for income in incomes}
-            expenses = {expense: st.session_state[expense] for expense in expenses}
-            # TODO: Save data to database
+            period = str(st.session_state["year"]) + "_" + str(st.session_state["month"])
+            incomes_data = {income: st.session_state[income] for income in incomes}
+            expenses_data = {expense: st.session_state[expense] for expense in expenses}
 
-            st.write(f"Income: {incomes}")
-            st.write(f"Expenses: {expenses}")
+            # Save data to MongoDB
+            entry = {
+                "period": period,
+                "incomes": incomes_data,
+                "expenses": expenses_data,
+                "comment": comment
+            }
+            collection.insert_one(entry)
+
+            st.write(f"Income: {incomes_data}")
+            st.write(f"Expenses: {expenses_data}")
             st.success("Data Saved!")
 
-# Function to display Data Visualization section
 if selected == "Data Visualization":
     st.header("Data Visualization")
     with st.form("saved_periods"):
-        period = st.selectbox("Select Period:", ["2024_June"])  # Placeholder for periods
+        # Get periods from database
+        periods = get_all_periods()
+        period = st.selectbox("Select Period:", periods)
         submitted = st.form_submit_button("Plot Period")
         if submitted:
-            # Placeholder data for visualization
-            comment = "Some Comment"
-            incomes = {'Salary': 1500, 'Other Income': 10}
-            expenses = {'Rent': 600, 'Utilities': 200, 'Groceries': 300,
-                        'Car': 100, 'Other Expenses': 50, 'Saving': 10}
+            # Get data from database
+            data = collection.find_one({"period": period})
+            comment = data.get("comment", "")
+            incomes_data = data.get("incomes", {})
+            expenses_data = data.get("expenses", {})
 
-            total_income = sum(incomes.values())
-            total_expense = sum(expenses.values())
+            total_income = sum(incomes_data.values())
+            total_expense = sum(expenses_data.values())
             remaining_budget = total_income - total_expense
             col1, col2, col3 = st.columns(3)
             col1.metric("Total Income", f"{total_income} {currency}")
@@ -80,21 +103,23 @@ if selected == "Data Visualization":
             col3.metric("Total Budget", f"{remaining_budget} {currency}")
             st.text(f"Comment: {comment}")
 
-            # Create sankey chart (placeholder)
-            label = list(incomes.keys()) + ["Total Income"] + list(expenses.keys())
-            source = list(range(len(incomes))) + [len(incomes)] * len(expenses)
-            target = [len(incomes)] * len(incomes) + [label.index(expense) for expense in expenses.keys()]
-            value = list(incomes.values()) + list(expenses.values())
+            # Create sankey chart
+            label = list(incomes_data.keys()) + ["Total Income"] + list(expenses_data.keys())
+            source = list(range(len(incomes_data))) + [len(incomes_data)] * len(expenses_data)
+            target = [len(incomes_data)] * len(incomes_data) + [label.index(expense) for expense in expenses_data.keys()]
+            value = list(incomes_data.values()) + list(expenses_data.values())
 
+            # Data to dict, dict to sankey
             link = dict(source=source, target=target, value=value)
             node = dict(label=label, pad=20, thickness=30, color="#4e67c8")
             data = go.Sankey(link=link, node=node)
 
-            # Plot sankey chart
+            # Plot it!
             fig = go.Figure(data)
             fig.update_layout(margin=dict(l=0, r=0, t=5, b=5))
             st.plotly_chart(fig, use_container_width=True)
 
-# Footer indicating developer information
-st.markdown("---")
-st.markdown("Developed by Ketan Thombare :heart:")
+# Footer
+st.markdown("<br>", unsafe_allow_html=True)
+st.markdown("<hr>", unsafe_allow_html=True)
+st.markdown("Developed by Ketan Thombare ❤️", unsafe_allow_html=True)
