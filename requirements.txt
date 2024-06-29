@@ -1,5 +1,8 @@
-streamlit
-pandas
-plotly
-streamlit_option_menu
-pymongo
+Flask==2.0.1
+pymongo==3.12.0
+streamlit==0.84.0
+requests==2.26.0
+werkzeug==2.0.1
+plotly==5.3.1
+streamlit-option-menu==0.2.0
+gunicorn==20.1.0
