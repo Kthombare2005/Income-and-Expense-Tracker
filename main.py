@@ -24,6 +24,15 @@ st.title(page_title + " " + page_icon)
 years = [datetime.today().year, datetime.today().year + 1]
 months = list(calendar.month_name[1:])
 
+# Custom CSS to change cursor to pointer for dropdown lists
+st.markdown("""
+    <style>
+        .pointer:hover {
+            cursor: pointer;
+        }
+    </style>
+""", unsafe_allow_html=True)
+
 hide_st_style = """
                 <style>
                 #MainMenu {visibility:hidden;}
@@ -62,7 +71,7 @@ if not st.session_state['authenticated']:
         with st.form("login_form"):
             username = st.text_input("Username")
             password = st.text_input("Password", type="password")
-            submitted = st.form_submit_button("Login")
+            submitted = st.form_submit_button("Login")  # Correct placement of form submit button
             if submitted:
                 with st.spinner("Authenticating..."):
                     response = authenticate_user("login", username, password)
@@ -79,7 +88,7 @@ if not st.session_state['authenticated']:
         with st.form("signup_form"):
             username = st.text_input("Username")
             password = st.text_input("Password", type="password")
-            submitted = st.form_submit_button("Signup")
+            submitted = st.form_submit_button("Signup")  # Correct placement of form submit button
             if submitted:
                 with st.spinner("Creating account..."):
                     response = authenticate_user("signup", username, password)
@@ -92,34 +101,36 @@ if not st.session_state['authenticated']:
 else:
     selected = option_menu(
         menu_title=None,
-        options=["Data Entry", "Data Visualization"],
-        icons=["pencil-fill", "bar-chart-fill"],
+        options=["Data Entry", "Data Visualization", "Update/Delete Data", "Logout"],
+        icons=["pencil-fill", "bar-chart-fill", "gear-fill", "box-arrow-right"],
         orientation="horizontal",
     )
 
     def get_all_periods():
-        periods = collection.distinct("period")
+        periods = collection.distinct("period", {"username": st.session_state['username']})
         return periods
 
     if selected == "Data Entry":
         st.header(f"Data Entry in {currency}")
         with st.form("entry_form", clear_on_submit=True):
             col1, col2 = st.columns(2)
-            col1.selectbox("Select Month:", months, key="month")
+            col1.selectbox("Select Month:", months, key="month", format_func=lambda x: x.title())
             col2.selectbox("Select Year:", years, key="year")
 
             "---"
             with st.expander("Income"):
                 for income in incomes:
-                    st.number_input(f"{income}:", min_value=0, format="%i", step=10, key=income)
+                    value = st.text_input(f"{income}:", key=f"input_{income}", placeholder="Enter the value")
+                    st.session_state[income] = int(value) if value else 0
             with st.expander("Expenses"):
                 for expense in expenses:
-                    st.number_input(f"{expense}:", min_value=0, format="%i", step=10, key=expense)
+                    value = st.text_input(f"{expense}:", key=f"input_{expense}", placeholder="Enter the value")
+                    st.session_state[expense] = int(value) if value else 0
             with st.expander("Comment"):
                 comment = st.text_area("", placeholder="Enter a comment here...")
 
             "---"
-            submitted = st.form_submit_button("Save Data")
+            submitted = st.form_submit_button("Save Data")  # Correct placement of form submit button
             if submitted:
                 with st.spinner("Saving data..."):
                     period = str(st.session_state["year"]) + "_" + str(st.session_state["month"])
@@ -147,7 +158,7 @@ else:
             with st.spinner("Loading periods..."):
                 periods = get_all_periods()
             period = st.selectbox("Select Period:", periods)
-            submitted = st.form_submit_button("Plot Period")
+            submitted = st.form_submit_button("Plot Period")  # Correct placement of form submit button
             if submitted:
                 with st.spinner("Loading data..."):
                     # Get data from database
@@ -183,3 +194,54 @@ else:
                     st.plotly_chart(fig, use_container_width=True)
                 else:
                     st.error("No data found for the selected period")
+        
+    elif selected == "Update/Delete Data":
+        st.header("Update or Delete Data")
+        periods = get_all_periods()
+        period_to_modify = st.selectbox("Select Period to Modify:", periods)
+        action = st.radio("Select Action:", ["Update", "Delete"])
+
+        if action == "Update":
+            data = collection.find_one({"period": period_to_modify, "username": st.session_state['username']})
+            if data:
+                "---"
+                with st.spinner("Loading data..."):
+                    st.empty()  # Clear previous content
+                    with st.form("update_form"):  # Wrap update logic within the form
+                        with st.expander("Income", expanded=True):
+                            update_incomes_data = {}
+                            for income in incomes:
+                                update_incomes_data[income] = st.number_input(f"{income}:", min_value=0, format="%i", step=10, key=f"update_{income}", placeholder="Enter the value", value=data["incomes"].get(income, 0))
+                        with st.expander("Expenses", expanded=True):
+                            update_expenses_data = {}
+                            for expense in expenses:
+                                update_expenses_data[expense] = st.number_input(f"{expense}:", min_value=0, format="%i", step=10, key=f"update_{expense}", placeholder="Enter the value", value=data["expenses"].get(expense, 0))
+                        with st.expander("Comment", expanded=True):
+                            update_comment = st.text_area("", placeholder="Enter a comment here...", value=data.get("comment", ""))
+
+                        "---"
+                        submitted = st.form_submit_button("Update Data")  # Correct placement of form submit button
+                        if submitted:
+                            with st.spinner("Updating data..."):
+                                # Update data in MongoDB
+                                incomes_data = {income: update_incomes_data[income] for income in incomes}
+                                expenses_data = {expense: update_expenses_data[expense] for expense in expenses}
+                                collection.update_one(
+                                    {"period": period_to_modify, "username": st.session_state['username']},
+                                    {"$set": {"incomes": incomes_data, "expenses": expenses_data, "comment": update_comment}}
+                                )
+                                st.success("Data Updated!")
+                                st.experimental_rerun()  # Rerun the app to refresh
+
+        elif action == "Delete":
+            confirmed = st.checkbox("Confirm Deletion")
+            if confirmed:
+                with st.spinner("Deleting data..."):
+                    # Delete data from MongoDB
+                    collection.delete_one({"period": period_to_modify, "username": st.session_state['username']})
+                    st.success("Data Deleted!")
+
+    elif selected == "Logout":
+        st.session_state['authenticated'] = False
+        st.success("Logged out successfully!")
+        st.experimental_rerun()
