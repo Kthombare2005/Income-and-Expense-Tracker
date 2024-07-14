@@ -477,10 +477,9 @@ def main():
             st.experimental_rerun()
         
         auth_selected = option_menu(
-            menu_title=None,
-            options=["Login", "Signup"],
+            None,
+            ["Login", "Signup"],
             icons=["key", "person-plus"],
-            orientation="horizontal",
         )
 
         if auth_selected == "Login":
@@ -522,10 +521,9 @@ def main():
             st.experimental_rerun()  # Rerun the app to go back to data entry section
         else:
             selected = option_menu(
-                menu_title=None,
-                options=["Data Entry", "Data Visualization", "Update/Delete Data", "Manage Fixed Expenses", "Predict Expenditures", "Logout"],
+                None,
+                ["Data Entry", "Data Visualization", "Update/Delete Data", "Manage Fixed Expenses", "Predict Expenditures", "Logout"],
                 icons=["pencil-fill", "bar-chart-fill", "gear-fill", "gear-fill", "activity", "box-arrow-right"],
-                orientation="horizontal",
             )
 
             def get_all_periods():
@@ -747,5 +745,7 @@ def main():
 
 if __name__ == "__main__":
     threading.Thread(target=run_flask_app).start()
+    main()
+
     main()
 
