@@ -1,0 +1,13 @@
+{
+  "type": "service_account",
+  "project_id": "delta-student-429403-j2",
+  "private_key_id": "4710a9d9ad6724139bb0969c0db6efd951221da5",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvAIBADANBgkqhkiG9w0BAQEFAASCBKYwggSiAgEAAoIBAQDpZ+eZ4ZJGjha5\nbiBs/ILAWbk27KjvqK0FJAe83pvthx332ZE8mjJYH9rN9zMLBAvCXxNVL508395k\nCeocLeTyTJXz25okKFSIv3PPRRva0EfX29amFWGghcLBCTRYsln0gwfzo1g9Q5QP\n+PgaA9apb5FdiS8x9readJBlP8oHVkUrWdoHFAwu65XMKm3+N5iv0SzmGK2/wbQl\nWPjkGnZOcMZ7RkxzO4JtENc/vnU46lpuykSXb6mK7lg036UHz8S6R8YEmNjatbSb\n2NfCYsX0DSK6sXZUQo6/fi2hZLFFnoUz4SIv/UqaEl89ddu+DUbVqnnL2pOMkm/7\n3vsaMpP/AgMBAAECggEAHD7pxTKKHCW31Erie633OMXi5yWusAoOni+lDBM4dX9D\nfioDLH1QmF+KgCBpOe0Ma0JMOaPgeGxzIlIc1bosGbJw9yjdN4D18fKRVkT7wPgx\nqYq+KC0wOlfVoLy3bABxaGiu/qoG1Ksn8OLlS2ipgqmwwswGPRqpT3TJwKb+kPKB\nh6aUYODJl+tGubf12L7R7cCJpa+8Kkuzt4TNSDkv5b26IY7aOjCx8BmeM65xVBkj\n3fx6zdyJRkBJq8k1wI0z9vFk7B123tflVtAm53TIih0pi3aYY/LX2c25jCfugmnd\nO3kXcIx1YN/sz/lPgotNTiG9lZ2nlFG9YXBdr2DToQKBgQD+vCQjLXIFIeKbDQkX\ncSp8HFixul19vWx4e+iqdYfS8VTDnieSI+dPs44pdEcFnnYnRUZ+VNIQC8qudlOp\n5gdFQIncxTASwwjLFmSuuTUfBVtvx7A1+w5yJWbdv617NCfGgdt3/q1VhdPwFmzV\niVGOE6jRpIBLlbXIS9YBBCIEEQKBgQDqkKWO16iY3Kdp0RZQGtQmmJ7AHDmourYh\n5YY61o8E4QsZ90Qc84gZAWBjtMlLLQPXANUv9gILrBXA6vc5iKfpkegiuBXyqLW3\n4vLMLvyGRRzwWtcJMwr+2kYzg0kvV9nZ3OjgE68dzbzxfvUoS/KRTLSNi3j4uL98\nK6tl1vnnDwKBgFxxHFAjwtf39ws7jMwUBk3p34oHzru9zSpgFQwfAL5dU9x1fXi8\nTMoQqAuFJez1F32i1zUrRNwL2266hBwI3SSVijIy4QI+AufoZXs+vPdX81m6Rskg\nJZro1c6tK6ClSbXxFBsUsgRyP3pGORK49X6wxbfmkaRcXQ6l7rCJtmpxAoGAICa5\neq3WvzUngVqWe15iC/RJdj2oLZeCFX1Xe8MjEWEjW2jIHkvHMN4+bww9tx8xcov7\nrLpEp4Lr7GiIgItZsKs+LVwcLgmv9seVziT2mhTpFYzuAqXLcQlMLA1nv6SECNe9\n19D65NPpfRSQ1/gpBH+GFAy1BSqVnJiDws7HrEMCgYAg0rM0J7NkYUpiIIs4pulM\nlUp6iio+AfC055NbpY3ATqCl/GQj+E/UBnZ1CFakxvBwP5FPDkLhrIaAKVpm54ox\nTfMW7a90YNSvFHUbQusygn992fkMEzPMJeyGnrRmJUIKE1zIEWvoWBxJMf6qkXrP\nKDlV2/JsMQbpF1gU94SUHA==\n-----END PRIVATE KEY-----\n",
+  "client_email": "nexus-coders@delta-student-429403-j2.iam.gserviceaccount.com",
+  "client_id": "102215548708564358106",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/nexus-coders%40delta-student-429403-j2.iam.gserviceaccount.com",
+  "universe_domain": "googleapis.com"
+}
