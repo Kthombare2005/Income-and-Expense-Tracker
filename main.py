@@ -746,5 +746,3 @@ def main():
 if __name__ == "__main__":
     threading.Thread(target=run_flask_app).start()
     main()
-
-    main()
