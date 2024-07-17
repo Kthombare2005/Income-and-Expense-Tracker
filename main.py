@@ -323,7 +323,10 @@ if __name__ == "__main__":
     threading.Thread(target=run_flask_app).start()
     main()
 '''
+<<<<<<< HEAD
 
+=======
+>>>>>>> 88f65c9c7573419a9d45778dfed849ad2e18b262
 import calendar
 from datetime import datetime
 import streamlit as st
@@ -337,7 +340,10 @@ import threading
 import pandas as pd
 from googleapiclient import discovery
 from google.oauth2 import service_account
+<<<<<<< HEAD
 from io import BytesIO
+=======
+>>>>>>> 88f65c9c7573419a9d45778dfed849ad2e18b262
 
 # MongoDB connection
 client = MongoClient("mongodb+srv://Nexus_Coder:Ketan%402005@expensetracker.ddtuk3v.mongodb.net/?retryWrites=true&w=majority&appName=ExpenseTracker")
@@ -430,6 +436,7 @@ def save_fixed_expenses(username, fixed_expenses):
         upsert=True
     )
 
+<<<<<<< HEAD
 # Function to export user data to Excel
 def export_to_excel(username):
     df = fetch_past_expenses(username)
@@ -440,6 +447,8 @@ def export_to_excel(username):
     processed_data = output.getvalue()
     return processed_data
 
+=======
+>>>>>>> 88f65c9c7573419a9d45778dfed849ad2e18b262
 def main():
     incomes = ['Salary', 'Other Income']
     expenses = ["Rent", "Utilities", "Groceries", "Loan Instalments", "Petrol/Diesel", "Car", "Other Expenses", "Saving"]
@@ -455,12 +464,17 @@ def main():
     years = [datetime.today().year, datetime.today().year + 1]
     months = list(calendar.month_name[1:])
 
+<<<<<<< HEAD
     # Custom CSS to change cursor to pointer for dropdown lists and highlight sections
+=======
+    # Custom CSS to change cursor to pointer for dropdown lists
+>>>>>>> 88f65c9c7573419a9d45778dfed849ad2e18b262
     st.markdown("""
         <style>
             .pointer:hover {
                 cursor: pointer;
             }
+<<<<<<< HEAD
             .highlight {
                 background-color: #f0f8ff;
                 padding: 10px;
@@ -472,6 +486,8 @@ def main():
                 background-color: inherit;
                 color: inherit;
             }
+=======
+>>>>>>> 88f65c9c7573419a9d45778dfed849ad2e18b262
         </style>
     """, unsafe_allow_html=True)
 
@@ -493,9 +509,12 @@ def main():
     if 'delete_complete' not in st.session_state:
         st.session_state['delete_complete'] = False
 
+<<<<<<< HEAD
     if 'updated' not in st.session_state:
         st.session_state['updated'] = False
 
+=======
+>>>>>>> 88f65c9c7573419a9d45778dfed849ad2e18b262
     if not st.session_state['authenticated']:
         if st.session_state['signup_success']:
             st.session_state['signup_success'] = False
@@ -506,7 +525,10 @@ def main():
             None,
             ["Login", "Signup"],
             icons=["key", "person-plus"],
+<<<<<<< HEAD
             menu_icon="cast", default_index=0, orientation="horizontal"
+=======
+>>>>>>> 88f65c9c7573419a9d45778dfed849ad2e18b262
         )
 
         if auth_selected == "Login":
@@ -514,7 +536,11 @@ def main():
             with st.form("login_form"):
                 username = st.text_input("Username")
                 password = st.text_input("Password", type="password")
+<<<<<<< HEAD
                 submitted = st.form_submit_button("Login")
+=======
+                submitted = st.form_submit_button("Login")  # Correct placement of form submit button
+>>>>>>> 88f65c9c7573419a9d45778dfed849ad2e18b262
                 if submitted:
                     with st.spinner("Authenticating..."):
                         response = authenticate_user("login", username, password)
@@ -522,7 +548,11 @@ def main():
                         st.success("Login successful")
                         st.session_state['authenticated'] = True
                         st.session_state['username'] = username
+<<<<<<< HEAD
                         st.experimental_rerun()
+=======
+                        st.experimental_rerun()  # Rerun the app to reflect authenticated state
+>>>>>>> 88f65c9c7573419a9d45778dfed849ad2e18b262
                     else:
                         st.error("Invalid credentials")
 
@@ -531,13 +561,21 @@ def main():
             with st.form("signup_form"):
                 username = st.text_input("Username")
                 password = st.text_input("Password", type="password")
+<<<<<<< HEAD
                 submitted = st.form_submit_button("Signup")
+=======
+                submitted = st.form_submit_button("Signup")  # Correct placement of form submit button
+>>>>>>> 88f65c9c7573419a9d45778dfed849ad2e18b262
                 if submitted:
                     with st.spinner("Creating account..."):
                         response = authenticate_user("signup", username, password)
                     if response.status_code == 201:
                         st.session_state['signup_success'] = True
+<<<<<<< HEAD
                         st.experimental_rerun()
+=======
+                        st.experimental_rerun()  # Rerun the app to reset to login form
+>>>>>>> 88f65c9c7573419a9d45778dfed849ad2e18b262
                     elif response.status_code == 400:
                         st.error("Account already exists")
 
@@ -545,6 +583,7 @@ def main():
         if st.session_state['delete_complete']:
             st.success("Data Deleted!")
             st.session_state['delete_complete'] = False
+<<<<<<< HEAD
             st.experimental_rerun()
         else:
             selected = option_menu(
@@ -552,6 +591,14 @@ def main():
                 ["Data Entry", "Data Visualization", "Update/Delete Data", "Manage Fixed Expenses", "Predict Expenditures", "Export Data", "Logout"],
                 icons=["pencil-fill", "bar-chart-fill", "gear-fill", "gear-fill", "activity", "file-earmark-excel", "box-arrow-right"],
                 menu_icon="cast", default_index=0, orientation="horizontal"
+=======
+            st.experimental_rerun()  # Rerun the app to go back to data entry section
+        else:
+            selected = option_menu(
+                None,
+                ["Data Entry", "Data Visualization", "Update/Delete Data", "Manage Fixed Expenses", "Predict Expenditures", "Logout"],
+                icons=["pencil-fill", "bar-chart-fill", "gear-fill", "gear-fill", "activity", "box-arrow-right"],
+>>>>>>> 88f65c9c7573419a9d45778dfed849ad2e18b262
             )
 
             def get_all_periods():
@@ -572,7 +619,10 @@ def main():
                     st.error(f"Data for {selected_month} {selected_year} already exists. Please choose a different period.")
                 else:
                     fixed_expenses_data = get_fixed_expenses(st.session_state['username'])
+<<<<<<< HEAD
                     all_expenses = set(expenses + list(fixed_expenses_data.keys()))
+=======
+>>>>>>> 88f65c9c7573419a9d45778dfed849ad2e18b262
                     with st.form("entry_form", clear_on_submit=True):
                         "---"
                         with st.expander("Income"):
@@ -580,9 +630,15 @@ def main():
                                 value = st.text_input(f"{income}:", key=f"input_{income}", placeholder="Enter the value")
                                 st.session_state[income] = int(value) if value else 0
                         with st.expander("Expenses"):
+<<<<<<< HEAD
                             for expense in all_expenses:
                                 if expense in fixed_expenses_data:
                                     st.text_input(f"{expense}:", value=fixed_expenses_data[expense], key=f"fixed_{expense}", disabled=True)
+=======
+                            for expense in expenses:
+                                if expense in fixed_expenses_data:
+                                    st.text_input(f"{expense} (Fixed)", value=fixed_expenses_data[expense], key=f"fixed_{expense}", disabled=True)
+>>>>>>> 88f65c9c7573419a9d45778dfed849ad2e18b262
                                     st.markdown(f"<small>This is a fixed expenditure. You can edit it from the fixed expenditure section.</small>", unsafe_allow_html=True)
                                 else:
                                     value = st.text_input(f"{expense}:", key=f"input_{expense}", placeholder="Enter the value")
@@ -591,11 +647,19 @@ def main():
                             comment = st.text_area("", placeholder="Enter a comment here...")
 
                         "---"
+<<<<<<< HEAD
                         submitted = st.form_submit_button("Save Data")
                         if submitted:
                             with st.spinner("Saving data..."):
                                 incomes_data = {income: st.session_state[income] for income in incomes}
                                 expenses_data = {expense: st.session_state[expense] for expense in all_expenses if expense not in fixed_expenses_data}
+=======
+                        submitted = st.form_submit_button("Save Data")  # Correct placement of form submit button
+                        if submitted:
+                            with st.spinner("Saving data..."):
+                                incomes_data = {income: st.session_state[income] for income in incomes}
+                                expenses_data = {expense: st.session_state[expense] for expense in expenses if expense not in fixed_expenses_data}
+>>>>>>> 88f65c9c7573419a9d45778dfed849ad2e18b262
 
                                 # Save data to MongoDB
                                 entry = {
@@ -615,12 +679,23 @@ def main():
             elif selected == "Data Visualization":
                 st.header("Data Visualization")
                 with st.form("saved_periods"):
+<<<<<<< HEAD
                     with st.spinner("Loading periods..."):
                         periods = get_all_periods()
                     period = st.selectbox("Select Period:", periods)
                     submitted = st.form_submit_button("Plot Period")
                     if submitted:
                         with st.spinner("Loading data..."):
+=======
+                    # Get periods from database
+                    with st.spinner("Loading periods..."):
+                        periods = get_all_periods()
+                    period = st.selectbox("Select Period:", periods)
+                    submitted = st.form_submit_button("Plot Period")  # Correct placement of form submit button
+                    if submitted:
+                        with st.spinner("Loading data..."):
+                            # Get data from database
+>>>>>>> 88f65c9c7573419a9d45778dfed849ad2e18b262
                             data = collection.find_one({"period": period, "username": st.session_state['username']})
                         if data:
                             comment = data.get("comment", "")
@@ -628,7 +703,11 @@ def main():
                             expenses_data = data.get("expenses", {})
 
                             total_income = sum(incomes_data.values())
+<<<<<<< HEAD
                             total_expense = sum([int(value) for value in expenses_data.values()])
+=======
+                            total_expense = sum(expenses_data.values())
+>>>>>>> 88f65c9c7573419a9d45778dfed849ad2e18b262
                             remaining_budget = total_income - total_expense
                             col1, col2, col3 = st.columns(3)
                             col1.subheader("Income")
@@ -643,7 +722,11 @@ def main():
                             target = [i + 1 for i in range(len(incomes_data.keys()))] + [len(incomes_data.keys()) + 1 + i for i in
                                                                                          range(len(expenses_data.keys()))]
                             value = [total_income] + [incomes_data[k] for k in incomes_data.keys()] + [total_expense] + \
+<<<<<<< HEAD
                                     [int(expenses_data[k]) for k in expenses_data.keys()]
+=======
+                                    [expenses_data[k] for k in expenses_data.keys()]
+>>>>>>> 88f65c9c7573419a9d45778dfed849ad2e18b262
                             fig = go.Figure(data=[go.Sankey(
                                 node=dict(
                                     pad=15,
@@ -670,6 +753,7 @@ def main():
                     if data:
                         "---"
                         with st.spinner("Loading data..."):
+<<<<<<< HEAD
                             st.empty()
                             with st.form("update_form"):
                                 st.subheader(f"Existing Data for {period_to_modify}")
@@ -680,6 +764,18 @@ def main():
                                     for expense in expenses:
                                         st.text(f"{expense}: {data['expenses'].get(expense, 0)} {currency}")
                                 with st.expander("Comment", expanded=True):
+=======
+                            st.empty()  # Clear previous content
+                            with st.form("update_form"):  # Wrap update logic within the form
+                                st.subheader(f"Existing Data for {period_to_modify}")
+                                with st.expander("Current Income Data"):
+                                    for income in incomes:
+                                        st.text(f"{income}: {data['incomes'].get(income, 0)} {currency}")
+                                with st.expander("Current Expense Data"):
+                                    for expense in expenses:
+                                        st.text(f"{expense}: {data['expenses'].get(expense, 0)} {currency}")
+                                with st.expander("Comment"):
+>>>>>>> 88f65c9c7573419a9d45778dfed849ad2e18b262
                                     st.text(f"{data.get('comment', '')}")
 
                                 "---"
@@ -687,6 +783,7 @@ def main():
                                 with st.expander("Income", expanded=False):
                                     update_incomes_data = {}
                                     for income in incomes:
+<<<<<<< HEAD
                                         value = data["incomes"].get(income, 0)
                                         update_incomes_data[income] = st.number_input(f"{income}:", min_value=0, format="%i", step=10, key=f"update_{income}", placeholder="Enter the value", value=int(value))
                                 with st.expander("Expenses", expanded=False):
@@ -694,13 +791,27 @@ def main():
                                     for expense in expenses:
                                         value = data["expenses"].get(expense, 0)
                                         update_expenses_data[expense] = st.number_input(f"{expense}:", min_value=0, format="%i", step=10, key=f"update_{expense}", placeholder="Enter the value", value=int(value))
+=======
+                                        update_incomes_data[income] = st.number_input(f"{income}:", min_value=0, format="%i", step=10, key=f"update_{income}", placeholder="Enter the value", value=data["incomes"].get(income, 0))
+                                with st.expander("Expenses", expanded=False):
+                                    update_expenses_data = {}
+                                    for expense in expenses:
+                                        update_expenses_data[expense] = st.number_input(f"{expense}:", min_value=0, format="%i", step=10, key=f"update_{expense}", placeholder="Enter the value", value=data["expenses"].get(expense, 0))
+>>>>>>> 88f65c9c7573419a9d45778dfed849ad2e18b262
                                 with st.expander("Comment", expanded=False):
                                     update_comment = st.text_area("", placeholder="Enter a comment here...", value=data.get("comment", ""))
 
                                 "---"
+<<<<<<< HEAD
                                 submitted = st.form_submit_button("Update Data")
                                 if submitted:
                                     with st.spinner("Updating data..."):
+=======
+                                submitted = st.form_submit_button("Update Data")  # Correct placement of form submit button
+                                if submitted:
+                                    with st.spinner("Updating data..."):
+                                        # Update data in MongoDB
+>>>>>>> 88f65c9c7573419a9d45778dfed849ad2e18b262
                                         incomes_data = {income: update_incomes_data[income] for income in incomes}
                                         expenses_data = {expense: update_expenses_data[expense] for expense in expenses}
                                         collection.update_one(
@@ -708,14 +819,22 @@ def main():
                                             {"$set": {"incomes": incomes_data, "expenses": expenses_data, "comment": update_comment}}
                                         )
                                         st.success("Data Updated!")
+<<<<<<< HEAD
                                         st.session_state['updated'] = True
                                         st.experimental_rerun()
+=======
+                                        st.experimental_rerun()  # Rerun the app to refresh
+>>>>>>> 88f65c9c7573419a9d45778dfed849ad2e18b262
 
                 elif action == "Delete":
                     st.warning(f"Are you sure you want to delete the data for {period_to_modify}? This action cannot be undone.")
                     confirmed = st.checkbox("Confirm Deletion")
                     if confirmed:
                         with st.spinner("Deleting data..."):
+<<<<<<< HEAD
+=======
+                            # Delete data from MongoDB
+>>>>>>> 88f65c9c7573419a9d45778dfed849ad2e18b262
                             collection.delete_one({"period": period_to_modify, "username": st.session_state['username']})
                             st.success("Data Deleted!")
                             st.session_state['delete_complete'] = True
@@ -724,6 +843,7 @@ def main():
             elif selected == "Manage Fixed Expenses":
                 st.header("Manage Fixed Expenses")
                 fixed_expenses_data = get_fixed_expenses(st.session_state['username'])
+<<<<<<< HEAD
 
                 with st.form("add_fixed_expense_form"):
                     st.write("Add Fixed Expense:")
@@ -758,6 +878,24 @@ def main():
                         st.text(f"{expense}: {fixed_expenses_data[expense]}")
 
                     st.form_submit_button("Refresh")
+=======
+                with st.form("fixed_expenses_form"):
+                    st.write("Fixed Expenses:")
+                    for expense in fixed_expenses:
+                        current_value = fixed_expenses_data.get(expense, "")
+                        new_value = st.text_input(f"{expense}:", value=current_value, key=f"fixed_{expense}")
+                        if new_value:
+                            fixed_expenses_data[expense] = new_value
+                        elif expense in fixed_expenses_data:
+                            del fixed_expenses_data[expense]
+
+                    submitted = st.form_submit_button("Save Fixed Expenses")
+                    if submitted:
+                        with st.spinner("Saving fixed expenses..."):
+                            save_fixed_expenses(st.session_state['username'], fixed_expenses_data)
+                            st.success("Fixed expenses updated successfully.")
+                            st.experimental_rerun()
+>>>>>>> 88f65c9c7573419a9d45778dfed849ad2e18b262
 
             elif selected == "Predict Expenditures":
                 st.header("Predict Future Expenditures")
@@ -784,6 +922,7 @@ def main():
                 else:
                     st.error("No past data available to analyze.")
 
+<<<<<<< HEAD
             elif selected == "Export Data":
                 st.header("Export Data")
                 st.write("Click the button below to export your data to an Excel file.")
@@ -797,6 +936,8 @@ def main():
                             mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
                         )
 
+=======
+>>>>>>> 88f65c9c7573419a9d45778dfed849ad2e18b262
             elif selected == "Logout":
                 st.header("Logout")
                 st.info("You have been logged out successfully.")
@@ -805,6 +946,9 @@ def main():
 if __name__ == "__main__":
     threading.Thread(target=run_flask_app).start()
     main()
+<<<<<<< HEAD
 
 
 
+=======
+>>>>>>> 88f65c9c7573419a9d45778dfed849ad2e18b262
