@@ -338,7 +338,6 @@ import pandas as pd
 from googleapiclient import discovery
 from google.oauth2 import service_account
 from io import BytesIO
-import xlsxwriter
 
 # MongoDB connection
 client = MongoClient("mongodb+srv://Nexus_Coder:Ketan%402005@expensetracker.ddtuk3v.mongodb.net/?retryWrites=true&w=majority&appName=ExpenseTracker")
@@ -437,7 +436,7 @@ def export_to_excel(username):
     output = BytesIO()
     writer = pd.ExcelWriter(output, engine='xlsxwriter')
     df.to_excel(writer, index=False, sheet_name='Expenses')
-    writer.save()
+    writer.close()  # Corrected line
     processed_data = output.getvalue()
     return processed_data
 
