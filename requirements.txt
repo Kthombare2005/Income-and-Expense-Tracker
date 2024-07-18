@@ -1,4 +1,5 @@
 streamlit
+streamlit-option-menu
 pymongo
 requests
 flask
