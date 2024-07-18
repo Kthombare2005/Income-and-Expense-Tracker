@@ -803,5 +803,5 @@ def main():
                 st.session_state['authenticated'] = False
 
 if __name__ == "__main__":
-    threading.Thread(target=run_flask_app).start()
-    main()
+    app.run(debug=False, host='0.0.0.0', port=int(os.environ.get('PORT', 5000)))
+
