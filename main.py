@@ -814,10 +814,7 @@ import streamlit as st
 from streamlit_option_menu import option_menu
 import plotly.graph_objects as go
 from pymongo import MongoClient
-import requests
-from flask import Flask, request, jsonify
 from werkzeug.security import generate_password_hash, check_password_hash
-import threading
 import pandas as pd
 from googleapiclient import discovery
 from google.oauth2 import service_account
@@ -830,47 +827,24 @@ collection = db["expenses"]
 fixed_expenses_collection = db["fixed_expenses"]
 users_collection = db["users"]
 
-# Flask endpoints base URL
-flask_base_url = "http://localhost:5000"
-
 # Google Cloud credentials and API setup
-credentials = service_account.Credentials.from_service_account_file('delta-student-429403-j2-4710a9d9ad67.json')
+credentials = service_account.Credentials.from_service_account_file('delta-student-429403-j2-4710a9d9ad67.json')  # Replace with the actual path to your JSON key file
 service = discovery.build('ml', 'v1', credentials=credentials)
 
 def authenticate_user(action, username, password):
-    url = f"{flask_base_url}/{action}"
-    response = requests.post(url, json={"username": username, "password": password})
-    return response
+    if action == "signup":
+        if users_collection.find_one({'username': username}):
+            return {"error": "User already exists"}, 400
 
-# Flask backend
-app = Flask(__name__)
+        hashed_password = generate_password_hash(password, method='sha256')
+        users_collection.insert_one({'username': username, 'password': hashed_password})
+        return {"message": "User created successfully"}, 201
 
-@app.route('/signup', methods=['POST'])
-def signup():
-    data = request.get_json()
-    username = data.get('username')
-    password = data.get('password')
-
-    if users_collection.find_one({'username': username}):
-        return jsonify({"error": "User already exists"}), 400
-
-    hashed_password = generate_password_hash(password, method='sha256')
-    users_collection.insert_one({'username': username, 'password': hashed_password})
-    return jsonify({"message": "User created successfully"}), 201
-
-@app.route('/login', methods=['POST'])
-def login():
-    data = request.get_json()
-    username = data.get('username')
-    password = data.get('password')
-
-    user = users_collection.find_one({'username': username})
-    if user and check_password_hash(user['password'], password):
-        return jsonify({"message": "Login successful"}), 200
-    return jsonify({"error": "Invalid credentials"}), 401
-
-def run_flask_app():
-    app.run(debug=False, port=5000)
+    elif action == "login":
+        user = users_collection.find_one({'username': username})
+        if user and check_password_hash(user['password'], password):
+            return {"message": "Login successful"}, 200
+        return {"error": "Invalid credentials"}, 401
 
 # Function to fetch past expenses data
 def fetch_past_expenses(username):
@@ -923,17 +897,16 @@ def export_to_excel(username):
     processed_data = output.getvalue()
     return processed_data
 
+# Streamlit app
 def main():
+    st.set_page_config(page_title="Income and Expense Tracker", page_icon="💸", layout="centered")
+
     incomes = ['Salary', 'Other Income']
     expenses = ["Rent", "Utilities", "Groceries", "Loan Instalments", "Petrol/Diesel", "Car", "Other Expenses", "Saving"]
     fixed_expenses = ["Rent", "Loan Instalments"]
     currency = "Rs"
-    page_title = "Income and Expense Tracker"
-    page_icon = ":money_with_wings:"
-    layout = "centered"
 
-    st.set_page_config(page_title=page_title, page_icon=page_icon, layout=layout)
-    st.title(page_title + " " + page_icon)
+    st.title("Income and Expense Tracker 💸")
 
     years = [datetime.today().year, datetime.today().year + 1]
     months = list(calendar.month_name[1:])
@@ -984,7 +957,7 @@ def main():
             st.session_state['signup_success'] = False
             st.success("Account Created Successfully. Please log in.")
             st.experimental_rerun()
-        
+
         auth_selected = option_menu(
             None,
             ["Login", "Signup"],
@@ -1000,8 +973,8 @@ def main():
                 submitted = st.form_submit_button("Login")
                 if submitted:
                     with st.spinner("Authenticating..."):
-                        response = authenticate_user("login", username, password)
-                    if response.status_code == 200:
+                        response, status_code = authenticate_user("login", username, password)
+                    if status_code == 200:
                         st.success("Login successful")
                         st.session_state['authenticated'] = True
                         st.session_state['username'] = username
@@ -1017,11 +990,11 @@ def main():
                 submitted = st.form_submit_button("Signup")
                 if submitted:
                     with st.spinner("Creating account..."):
-                        response = authenticate_user("signup", username, password)
-                    if response.status_code == 201:
+                        response, status_code = authenticate_user("signup", username, password)
+                    if status_code == 201:
                         st.session_state['signup_success'] = True
                         st.experimental_rerun()
-                    elif response.status_code == 400:
+                    elif status_code == 400:
                         st.error("Account already exists")
 
     else:
@@ -1123,8 +1096,10 @@ def main():
 
                             label = ["Income"] + list(incomes_data.keys()) + ["Expense"] + list(expenses_data.keys())
                             source = [0] * (len(incomes_data.keys()) + 1) + [i + 1 for i in range(len(expenses_data.keys()))]
-                            target = [i + 1 for i in range(len(incomes_data.keys()))] + [len(incomes_data.keys()) + 1 + i for i in range(len(expenses_data.keys()))]
-                            value = [total_income] + [incomes_data[k] for k in incomes_data.keys()] + [total_expense] + [int(expenses_data[k]) for k in expenses_data.keys()]
+                            target = [i + 1 for i in range(len(incomes_data.keys()))] + [len(incomes_data.keys()) + 1 + i for i in
+                                                                                         range(len(expenses_data.keys()))]
+                            value = [total_income] + [incomes_data[k] for k in incomes_data.keys()] + [total_expense] + \
+                                    [int(expenses_data[k]) for k in expenses_data.keys()]
                             fig = go.Figure(data=[go.Sankey(
                                 node=dict(
                                     pad=15,
@@ -1284,7 +1259,4 @@ def main():
                 st.session_state['authenticated'] = False
 
 if __name__ == "__main__":
-    threading.Thread(target=run_flask_app).start()
     main()
-
-
