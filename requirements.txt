@@ -1,0 +1,12 @@
+streamlit
+streamlit-option-menu
+plotly
+pymongo
+requests
+flask
+werkzeug
+pandas
+google-api-python-client
+google-auth
+xlsxwriter
+google-generativeai

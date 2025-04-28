@@ -1,0 +1,12 @@
+# Python
+*.pyc
+__pycache__/
+venv/
+.env
+
+# MongoDB
+.mongo/
+
+# IDE or Editor files
+.idea/
+.vscode/
