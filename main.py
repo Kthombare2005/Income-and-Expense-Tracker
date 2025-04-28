@@ -1,5 +1,5 @@
+# All your imports first
 import calendar
-import os
 import threading
 from datetime import datetime
 
@@ -14,7 +14,7 @@ from streamlit_option_menu import option_menu
 from werkzeug.security import generate_password_hash, check_password_hash
 import google.generativeai as genai
 
-# MongoDB connection
+# MongoDB setup
 client = MongoClient("mongodb+srv://Nexus_Coder:Ketan%402005@expensetracker.ddtuk3v.mongodb.net/?retryWrites=true&w=majority&appName=ExpenseTracker")
 db = client["ExpenseTracker"]
 collection = db["expenses"]
@@ -24,7 +24,7 @@ fixed_values_collection = db["fixed_values"]
 # Gemini AI setup
 genai.configure(api_key="AIzaSyBXn83YAEyl6tjrMeMucHYsPiRmxQwgii4")
 
-# Flask backend
+# Flask API
 app = Flask(__name__)
 
 @app.route('/signup', methods=['POST'])
@@ -52,7 +52,7 @@ def login():
     return jsonify({"error": "Invalid credentials"}), 401
 
 def run_flask_app():
-    app.run(debug=False, port=5000, use_reloader=False)
+    app.run(host="0.0.0.0", port=5000, debug=False, use_reloader=False)
 
 def authenticate_user(action, username, password):
     url = f"http://localhost:5000/{action}"
@@ -179,4 +179,4 @@ def main():
 
 if __name__ == "__main__":
     threading.Thread(target=run_flask_app).start()
-    os.system("streamlit run main.py")
+    main()
